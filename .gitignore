@@ -1,0 +1,59 @@
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+__pycache__
+
+# Ignore the virtual environment directory
+env/
+venv/
+*.env
+*.venv
+
+# Ignore Django-specific files
+db.sqlite3
+*.log
+*.pot
+*.pyc
+
+# Ignore the settings file for sensitive data
+# config/settings.py
+
+# Ignore local Django migrations
+# /app/migrations/*
+
+# Ignore coverage and test result files
+.coverage
+nosetests.xml
+pytest*.xml
+*.cover
+
+# Ignore the local database file (if you use SQLite for development)
+*.sqlite3
+
+# Ignore static files that are generated
+/static/
+
+# Ignore media files (you may want to customize this based on your project setup)
+media/
+
+# Ignore IDEs and editor files
+.idea/
+.vscode/
+*.swp
+
+# Ignore operating system-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore other Python-related files
+*.pyd
+*.pdb
+*.pyc
+*.pyo
+
+# Ignore local Docker files if any
+docker-compose.override.yml
+docker/.env
+
+# Ignore specific configurations (such as for local development)
+# local_settings.py

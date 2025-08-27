@@ -1,0 +1,26 @@
+from .base_enum import BaseEnum
+
+
+class NotificationType(BaseEnum):
+    SYSTEM = "system"
+    USER = "user"
+    SCHOOL = "school"
+    COMMENT = "comment"
+    REPORT = "report"
+    INFO = "info"
+    ASSIGNMENT = "assignment"
+    STATUS_CHANGE = "status_change"
+    DEADLINE = "deadline"
+    REPORT_ASSIGNMENT = "report_assignment"
+    MULTIPLE_REPORT_ASSIGNMENT = "multiple_report_assignment"
+    REPORT_UNASSIGNMENT = "report_unassignment"
+    MULTIPLE_REPORT_UNASSIGNMENT = "multiple_report_unassignment"
+    NEW_COMMENTS = "new_comments"
+    REPORT_SUBMISSION = "report_submission"
+    APPLICATION_SUBMISSION = "application_submission"
+    APPLICATION_EVALUATION = "application_evaluation"
+    COMPLAINT_ASSIGNMENT = "complaint_assignment"
+    NEW_AGENCY_USER = "new_agency_user"
+    SCHOOL_INFO_UPDATE = "school_info_update"
+    BOARD_CALENDAR_UPDATE = "board_calendar_update"
+    NEW_SCHOOL_USERS = "new_school_users"
