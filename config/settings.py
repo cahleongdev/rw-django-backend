@@ -255,6 +255,22 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 AWS_QUERYSTRING_AUTH = False
 
+# LocalStack Endpoint Configuration
+AWS_ENDPOINT_URL = os.environ.get("AWS_ENDPOINT_URL")
+DYNAMODB_ENDPOINT_URL = os.environ.get("DYNAMODB_ENDPOINT_URL")
+S3_ENDPOINT_URL = os.environ.get("S3_ENDPOINT_URL")
+
+# LocalStack Configuration (when AWS credentials are not available)
+if not AWS_ACCESS_KEY_ID or not AWS_SECRET_ACCESS_KEY:
+    # Use LocalStack defaults
+    AWS_ACCESS_KEY_ID = "test"
+    AWS_SECRET_ACCESS_KEY = "test"
+    AWS_STORAGE_BUCKET_NAME = AWS_STORAGE_BUCKET_NAME or "test-bucket"
+    AWS_S3_REGION_NAME = AWS_S3_REGION_NAME or "us-east-1"
+    DYNAMODB_TABLE_NAME = DYNAMODB_TABLE_NAME or "notifications"
+    AWS_S3_EXPIRATION_TIME = AWS_S3_EXPIRATION_TIME or "3600"  # 1 hour
+    print("AWS credentials not found, using LocalStack configuration")
+
 # Twilio Configuration
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID")
 TWILIO_API_KEY = os.environ.get("TWILIO_API_KEY")

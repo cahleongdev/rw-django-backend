@@ -1,5 +1,8 @@
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from datetime import datetime
@@ -30,6 +33,8 @@ from app.services.school_reports import filterSchoolReports
 from app.services.schools import get_schools_with_multiple_submissions
 from app.views.notifications import notification_service
 from app.utils.helper import generateUniqueID
+from app.services.aws_mock import mock_aws_service
+from app.utils.pagination import CustomPagination
 
 
 class SubmissionAPI(APIView):
@@ -293,12 +298,8 @@ class SubmissionDownloadAPI(APIView):
     def get(self, req, pk):
         submission = get_object_or_404(Submission, pk=pk)
 
-        s3_client = boto3.client(
-            "s3",
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name=settings.AWS_S3_REGION_NAME,
-        )
+        # Use mock AWS service instead of direct boto3 calls
+        s3_client = mock_aws_service.get_s3_client()
 
         for file_url in submission.file_urls:
             file_url["file_url"] = generate_get_presigned_url(

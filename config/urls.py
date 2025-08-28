@@ -11,7 +11,7 @@ Class-based views
     2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+    2. Add a URL to urlpatterns:  path('blog/', include('app.urls'))
 """
 
 from django.contrib import admin
@@ -21,6 +21,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
 from app.consumers.notifications import NotificationConsumer
+from app.views.health import health_check
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -37,6 +38,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin", admin.site.urls),
     path("api/", include("app.urls")),
+    path("health/", health_check, name="health-check"),
     path(
         "swagger/",
         schema_view.with_ui("swagger", cache_timeout=0),

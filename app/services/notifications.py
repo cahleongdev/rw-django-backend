@@ -18,23 +18,15 @@ from app.models.reports import Report
 from app.models.schools import School
 from app.models.users import User
 from app.serializers.notifications import NotificationSerializer
+from app.services.aws_mock import mock_aws_service
 
 
 class NotificationService:
     def __init__(self):
-        self.dynamodb = boto3.resource(
-            "dynamodb",
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name="us-east-1",
-        )
-        self.dynamodb_client = boto3.client(
-            "dynamodb",
-            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name="us-east-1",
-        )
-        self.table = self.dynamodb.Table(settings.DYNAMODB_TABLE_NAME)
+        # Use mock AWS service instead of direct boto3 calls
+        self.dynamodb = mock_aws_service.get_dynamodb_resource()
+        self.dynamodb_client = mock_aws_service.get_dynamodb_client()
+        self.table = self.dynamodb.Table(settings.DYNAMODB_TABLE_NAME or 'notifications')
 
     def _format_value(self, value):
         if isinstance(value, str):

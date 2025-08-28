@@ -11,6 +11,7 @@ A Django-based REST API backend service with WebSocket support for real-time com
 - JWT authentication
 - Redis for caching and WebSocket support
 - [Django Tasks for background tasks](https://github.com/RealOrangeOne/django-tasks)
+- **LocalStack integration** for local AWS service emulation
 
 ## Prerequisites
 
@@ -19,40 +20,53 @@ A Django-based REST API backend service with WebSocket support for real-time com
 - PostgreSQL (if running locally)
 - Redis (if running locally)
 
-## Installation
+## Quick Start
 
-1. Clone the repository:
+### 1. Set up environment variables
 
-```bash
-git clone <repository-url>
-cd reportwell-api
-```
-
-2. Create and activate a virtual environment:
+**For LocalStack (Recommended for Development):**
 
 ```bash
-python -m venv venv
-source venv/bin/activate
+cp env.localstack .env
 ```
 
-3. Install dependencies:
+**For Real AWS:**
 
 ```bash
-pip install -r requirements.txt
+cp env.aws .env
+# Edit .env and fill in your AWS credentials
 ```
 
-4. Set up environment variables:
-   Create a `.env` file in the root directory based on the `.env.example` file.
-
-## Running the Application
-
-1. Start the development server:
+### 2. Start the application
 
 ```bash
-$ docker compose up -d
-$ python manage.py rqworker --job-class django_tasks.backends.rq.Job --with-scheduler &
-$ python manage.py runserver
+docker-compose up --build
 ```
+
+This will start:
+
+- Django web application
+- PostgreSQL database
+- Redis
+- LocalStack (AWS services emulator)
+
+### 3. Access the application
+
+- **Django**: http://localhost:8000
+- **LocalStack**: http://localhost:4566
+- **Health Check**: http://localhost:8000/health/
+
+## LocalStack Integration
+
+This project automatically detects whether AWS credentials are available:
+
+- **With AWS credentials**: Uses real AWS services
+- **Without AWS credentials**: Automatically switches to LocalStack
+
+LocalStack provides mock AWS services locally:
+
+- **S3**: File storage and presigned URLs
+- **DynamoDB**: NoSQL database for notifications
 
 ## Development
 

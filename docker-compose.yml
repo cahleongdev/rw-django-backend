@@ -9,10 +9,18 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - .env # Optional: Add environment variables in a .env file
+      - .env
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+    environment:
+      - AWS_ENDPOINT_URL=http://localstack:4566
+      - DYNAMODB_ENDPOINT_URL=http://localstack:4566
+      - S3_ENDPOINT_URL=http://localstack:4566
 
   db:
     image: postgres:16
@@ -22,8 +30,46 @@ services:
       POSTGRES_DB: reportwelldb
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:latest
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  localstack:
+    image: localstack/localstack:2.0
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=dynamodb,s3
+      - DEBUG=1
+      - AWS_DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - PERSISTENCE=0
+      - SKIP_SSL_CERT_DOWNLOAD=1
+      - LAMBDA_EXECUTOR=local
+      - SKIP_INTERNAL_TESTS=1
+      - PERSISTENCE_SKIP_INIT=1
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - localstack_data:/tmp/localstack
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:4566/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  localstack_data:

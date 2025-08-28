@@ -1,16 +1,12 @@
 import boto3
 from cachetools import TTLCache, cached
 from django.conf import settings
+from app.services.aws_mock import mock_aws_service
 
 
 @cached(TTLCache(maxsize=1, ttl=60 * 60))
 def get_s3_client():
-    return boto3.client(
-        "s3",
-        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-        region_name=settings.AWS_S3_REGION_NAME,
-    )
+    return mock_aws_service.get_s3_client()
 
 
 def generate_presigned_url(upload_path, file_name, file_type):
